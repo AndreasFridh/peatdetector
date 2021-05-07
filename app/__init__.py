@@ -2,8 +2,12 @@ import cv2
 import math
 import numpy as np;
 import matplotlib 
+import io
+import base64
+from vimba import *
 
-from flask import Flask, request, send_from_directory
+
+from flask import Flask, request, send_from_directory, make_response, send_file
 from datetime import datetime
 from matplotlib import pyplot as plt
 
@@ -19,10 +23,11 @@ class analysisResponse():
         self.largest_blob_pos_y = largest_blob_pos_y
 
 class images():
-    def __init__(self,img_raw=None,img_bw=None,img_mask=None,img_analysed=None):
+    def __init__(self,img_raw=None,img_bw=None,img_mask=None,img_masked=None, img_analysed=None):
         self.raw = img_raw
         self.bw = img_bw
         self.mask = img_mask
+        self.masked = img_masked
         self.analysed = img_analysed
 
 images = images()
@@ -40,12 +45,25 @@ def run_analysis():
 
 
     """
-@app.route('/grab_img')
-def grab_img():
+@app.route('/get_img')
+def get_img():
     if file_write_result() == True: 
-        return send_from_directory("Result.png", "")
+        return send_file(
+                    '../frame.jpg',
+                    mimetype='image/jpg',
+                    attachment_filename='snapshot.jpg',
+                    cache_timeout=0
+                ), 200
+
     else: 
         return "Image not grabbed ok"
+
+@app.route('/generate_report')
+def generate_report():
+    if write_report() == True: 
+        return "Report generated"
+    else: 
+        return "Repoort failed"
 
 # 
 # Attributes:
@@ -81,6 +99,7 @@ def apply_text(img,x,y,text):
 
 def peat_detector():
     print("Peat detector running:")
+
     if grab_img() == True :
         print("Running analysis")
         result = analysisResponse()
@@ -92,12 +111,16 @@ def peat_detector():
         params.maxArea = 100000
         params.filterByCircularity = False
         params.filterByColor = False
-        params.filterByConvexity = False
+        params.filterByConvexity = True
+
+        params.minConvexity = 0.4
+        params.maxConvexity = 1 
+
         params.filterByInertia = False
 
         detector = cv2.SimpleBlobDetector_create(params)
 
-        keypoints = detector.detect(images.mask)
+        keypoints = detector.detect(images.masked)
 
         images.analysed = cv2.drawKeypoints(images.raw, keypoints, np.array([]), (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
@@ -163,44 +186,68 @@ def file_write_result():
         return False
         
 def write_report():  
+
+    result = peat_detector()
+
     now = datetime.now()
 
-    text = 'Object: ' + now.strftime("%Y %m %d T%H-%M-%S")
+    text = 'Tracked target: ' + now.strftime("%Y %m %d T%H-%M-%S")
 
-    apply_text(im_analysed,int(largest_blob_pos_x) + int(largest_blob_size), int(largest_blob_pos_y)- int(largest_blob_size),text)
+    apply_text(images.analysed,int(result.largest_blob_pos_x) + int(result.largest_blob_size), int(result.largest_blob_pos_y)- int(result.largest_blob_size),text)
 
 
     fig=plt.figure(figsize=(25, 25))
-    plt.title('Image analysis result')
+    plt.title('Automatic Peat detector image analysis result report')
 
     columns = 2
     rows = 2
     fig.add_subplot(rows, columns, 1)
-    plt.imshow(im_color,cmap='gist_gray')
+    plt.imshow(images.raw,cmap='gist_gray')
 
     fig.add_subplot(rows, columns, 2)
-    plt.imshow(mask, cmap='gist_gray')
+    plt.imshow(images.mask, cmap='gist_gray')
 
     fig.add_subplot(rows, columns, 3)
-    plt.imshow(im_masked, cmap='gist_gray')
+    plt.imshow(images.masked, cmap='gist_gray')
 
     fig.add_subplot(rows, columns, 4)
-    plt.imshow(im_analysed)
+    plt.imshow(images.analysed)
 
     filename = "Image Analyis Peat Detection Report " + now.strftime("%Y %m %d T%H-%M-%S")
 
     plt.savefig(filename) 
-    plt.show()
-
-def grab_img():
-
-    images.raw = cv2.imread("test.jpg")
-    images.bw = cv2.cvtColor(images.raw , cv2.COLOR_BGR2RGB)
-    images.mask = cv2.imread("mask.jpg", 0)
-
-    images.mask = cv2.bitwise_and(images.bw,images.bw,  mask = images.mask)
 
     return True
+
+
+def grab_img():
+    if grab_camera_frame() == True:
+        images.raw = cv2.imread("frame.jpg")
+        images.bw = cv2.cvtColor(images.raw , cv2.COLOR_BGR2RGB)
+        images.mask = cv2.imread("frame.jpg", 0)
+
+        images.masked = cv2.bitwise_and(images.bw,images.bw,  mask = images.mask)
+
+        return True
+
+    
+def grab_camera_frame():
+    with Vimba.get_instance() as vimba:
+        cams = vimba.get_all_cameras()
+        with cams[0] as cam:
+            frame = cam.get_frame()
+            frame.convert_pixel_format(PixelFormat.Mono8)
+            cv2.imwrite('frame.jpg', frame.as_opencv_image())
+    return True
+
+def camera_adjust_exp():
+    with Vimba.get_instance() as vimba:
+        cams = vimba.get_all_cameras()
+        with cams[0] as cam:
+            exposure_time = cam.ExposureTime
+            time = exposure_time.get()
+            inc = exposure_time.get_increment()
+            exposure_time.set(time + inc)
 
 
 #if __name__ == '__main__':

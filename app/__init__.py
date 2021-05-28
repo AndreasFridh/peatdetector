@@ -3,9 +3,7 @@ import math
 import numpy as np;
 import matplotlib 
 import io
-import base64
 from vimba import *
-
 
 from flask import Flask, request, send_from_directory, make_response, send_file
 from datetime import datetime
@@ -35,16 +33,17 @@ images = images()
 @app.route('/run_analysis')
 def run_analysis():
     
-    result = analysisResponse()
-
     result = peat_detector()
     
-    return """
-    
-    Blob found, Max Area: """ + str(result.largest_blob_size) + """
+    return {
+        "Command": "run_analysis",
+        "Result":"true",
+        "AnalysisResult":result.blobsfound,
+        "AnalysisResultSize": str(result.largest_blob_size),
+        "AnalysisResultPosX": str(result.largest_blob_pos_x),
+        "AnalasisResultPosY": str(result.largest_blob_pos_y),        
+    }
 
-
-    """
 @app.route('/get_img')
 def get_img():
     if file_write_result() == True: 
@@ -58,12 +57,72 @@ def get_img():
     else: 
         return "Image not grabbed ok"
 
+@app.route('/get_mask')
+def get_mask():
+    return send_file(
+                '../mask.jpg',
+                mimetype='image/jpg',
+                attachment_filename='snapshot.jpg',
+                cache_timeout=0
+            ), 200
+
+@app.route('/get_result')
+def get_result():
+    if file_write_result() == True: 
+        return send_file(
+                    '../result.png',
+                    mimetype='image/png',
+                    attachment_filename='snapshot.png',
+                    cache_timeout=0
+                ), 200
+
+    else: 
+        return "Image not grabbed ok"
+
 @app.route('/generate_report')
 def generate_report():
     if write_report() == True: 
-        return "Report generated"
+            return {
+            "Command": "generate_report",
+            "Result":"true",
+    }
     else: 
-        return "Repoort failed"
+            return {
+            "Command": "generate_report",
+            "Result":"false",
+    }
+
+@app.route('/generate_report_pdf')
+def generate_report_pdf():
+    if id is not None:
+        binary_pdf = get_binary_pdf_data_from_database(id=id)
+        response = make_response(binary_pdf)
+        response.headers['Content-Type'] = 'application/pdf'
+        response.headers['Content-Disposition'] = \
+            'inline; filename=%s.pdf' % 'yourfilename'
+        return response
+
+
+@app.route('/exp_show', methods=['GET', 'POST'])
+def exp_show():
+    return {
+        "Exp time": str(camera_ctrl_exp_show()),
+    }
+
+@app.route('/exp_dec')
+def exp_dec():
+    return {
+        "Exp time": str(camera_ctrl_exp_dec()),
+        "Command": "exp_dec",
+        "Result":"true",
+    }
+@app.route('/exp_inc')
+def exp_inc():
+    return {
+        "Exp time": str(camera_ctrl_exp_inc()),
+        "Command": "exp_inc",
+        "Result":"true",
+    }
 
 # 
 # Attributes:
@@ -224,12 +283,11 @@ def grab_img():
     if grab_camera_frame() == True:
         images.raw = cv2.imread("frame.jpg")
         images.bw = cv2.cvtColor(images.raw , cv2.COLOR_BGR2RGB)
-        images.mask = cv2.imread("frame.jpg", 0)
+        images.mask = cv2.imread("mask.jpg", 0)
 
         images.masked = cv2.bitwise_and(images.bw,images.bw,  mask = images.mask)
 
         return True
-
     
 def grab_camera_frame():
     with Vimba.get_instance() as vimba:
@@ -240,15 +298,34 @@ def grab_camera_frame():
             cv2.imwrite('frame.jpg', frame.as_opencv_image())
     return True
 
-def camera_adjust_exp():
+# Functions to handle camera settings
+def camera_ctrl_exp_show():
+    with Vimba.get_instance() as vimba:
+        cams = vimba.get_all_cameras()
+        with cams[0] as cam:
+            exposure_time = cam.ExposureTime
+            time = exposure_time.get()
+    return time
+
+def camera_ctrl_exp_dec():
+    with Vimba.get_instance() as vimba:
+        cams = vimba.get_all_cameras()
+        with cams[0] as cam:
+            exposure_time = cam.ExposureTime
+            time = exposure_time.get()
+            dec = exposure_time.get_increment()
+            exposure_time.set(time - 200*dec)
+    return (time - dec)
+
+def camera_ctrl_exp_inc():
     with Vimba.get_instance() as vimba:
         cams = vimba.get_all_cameras()
         with cams[0] as cam:
             exposure_time = cam.ExposureTime
             time = exposure_time.get()
             inc = exposure_time.get_increment()
-            exposure_time.set(time + inc)
-
+            exposure_time.set(time + 200*inc)
+    return (time + inc)
 
 #if __name__ == '__main__':
 #   app.run()

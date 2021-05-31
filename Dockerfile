@@ -1,20 +1,15 @@
 FROM continuumio/miniconda3
 
-COPY /VimbaPython-master/ /tmp/VimbaPython-master
 COPY . /tmp/
 
-ENV PATH /opt/conda/envs/env/bin:$PATH
+WORKDIR /tmp
 
-RUN conda create -n "img_analysis" python=3.8 &&\
-    conda update -n base -c defaults conda &&\
-    source activate img_analysis &&\
-    conda install numpy, matplotlib, opencv
+RUN conda env create --file /tmp/enviroment.yml
+SHELL ["/bin/bash", "--login", "-c"]
 
-RUN python -m pip install /tmp/VimbaPython-master/.
-
+RUN echo "conda activate img_analysis" >> ~/.bashrc
 
 EXPOSE 5000
 
-#ENTRYPOINT [ "python" ]
 
 #CMD [ "/tmp/app/__init__.py" ]

@@ -3,6 +3,8 @@ import math
 import numpy as np;
 import matplotlib 
 import io
+import getpass
+
 from vimba import *
 
 from flask import Flask, request, send_from_directory, make_response, send_file
@@ -329,4 +331,4 @@ def camera_ctrl_exp_inc():
     return (time + inc)
 
 if __name__ == '__main__':
-   app.run()
+	app.run(host='0.0.0.0')

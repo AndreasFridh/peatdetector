@@ -132,7 +132,7 @@ def exp_inc():
 @app.route('/exp_set', methods=['GET', 'POST'])
 def exp_set():
     return {
-        "Exp time": str(camera_ctrl_exp_custom(var_request.args.get('exp')exp)),
+        "Exp time": str(camera_ctrl_exp_custom(var_request.args.get('exp'))),
         "Command": "exp_inc",
         "Result":"true",
     }

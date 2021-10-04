@@ -346,8 +346,10 @@ def camera_ctrl_exp_level1():
         cams = vimba.get_all_cameras()
         with cams[0] as cam:
             exposure_time = cam.ExposureTime
+            time = exposure_time.get()
             exposure_time.set(50000)
-    return (exposure_time.get())
+            time = exposure_time.get()
+    return (time)
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0')

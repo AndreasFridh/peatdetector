@@ -108,7 +108,7 @@ def generate_report_pdf():
         return response
 
 
-@app.route('/exp_show', methods=['GET', 'POST'])
+@app.route('/exp_show')
 def exp_show():
     return {
         "Exp time": str(camera_ctrl_exp_show()),
@@ -129,7 +129,7 @@ def exp_inc():
         "Result":"true",
     }
 
-@app.route('/exp_set')
+@app.route('/exp_set', methods=['GET', 'POST'])
 def exp_set():
     return {
         var_exp = request.args.get('exp')

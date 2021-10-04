@@ -259,7 +259,7 @@ def file_write_result():
         return False
 
 def write_histogram()
-
+    return true
         
 def write_report():  
 

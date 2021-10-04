@@ -132,7 +132,7 @@ def exp_inc():
 @app.route('/exp_level1')
 def exp_level1():
     return {
-        "Exp time": str(camera_ctrl_exp_level1),
+        "Exp time": str(camera_ctrl_exp_level1()),
         "Command": "exp_inc",
         "Result":"true",
     }

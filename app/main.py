@@ -347,7 +347,7 @@ def camera_ctrl_exp_level1():
         with cams[0] as cam:
             exposure_time = cam.ExposureTime
             exposure_time.set(100000)
-    return (time + inc)
+    return (exposure_time.get())
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0')

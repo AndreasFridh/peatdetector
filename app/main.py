@@ -132,7 +132,7 @@ def exp_inc():
 @app.route('/exp_level1')
 def exp_level1():
     return {
-        "Exp time": str(camera_ctrl_exp_level1()),
+        "Exp time": str(camera_ctrl_exp_custom(25000)),
         "Command": "exp_inc",
         "Result":"true",
     }
@@ -341,13 +341,13 @@ def camera_ctrl_exp_inc():
             exposure_time.set(time + 200*inc)
     return (time + inc)
 
-def camera_ctrl_exp_level1():
+def camera_ctrl_exp_custom(new_exp):
     with Vimba.get_instance() as vimba:
         cams = vimba.get_all_cameras()
         with cams[0] as cam:
             exposure_time = cam.ExposureTime
             time = exposure_time.get()
-            exposure_time.set(50000)
+            exposure_time.set(new_exp)
             time = exposure_time.get()
     return (time)
 

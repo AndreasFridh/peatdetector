@@ -129,6 +129,15 @@ def exp_inc():
         "Result":"true",
     }
 
+@app.route('/exp_level1')
+def exp_level1():
+    return {
+        "Exp time": str(camera_ctrl_exp_level1),
+        "Command": "exp_inc",
+        "Result":"true",
+    }
+
+
 # 
 # Attributes:
 # img:    Image object for text to be overlayed on.
@@ -330,6 +339,14 @@ def camera_ctrl_exp_inc():
             time = exposure_time.get()
             inc = exposure_time.get_increment()
             exposure_time.set(time + 200*inc)
+    return (time + inc)
+
+def camera_ctrl_exp_level1():
+    with Vimba.get_instance() as vimba:
+        cams = vimba.get_all_cameras()
+        with cams[0] as cam:
+            exposure_time = cam.ExposureTime
+            exposure_time.set(100000)
     return (time + inc)
 
 if __name__ == '__main__':

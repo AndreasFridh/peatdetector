@@ -129,10 +129,11 @@ def exp_inc():
         "Result":"true",
     }
 
-@app.route('/exp_level1')
-def exp_level1():
+@app.route('/exp_set')
+def exp_set():
     return {
-        "Exp time": str(camera_ctrl_exp_custom(25000)),
+        var_exp = request.args.get('exp', default = 10000, type = int)
+        "Exp time": str(camera_ctrl_exp_custom(var_exp)),
         "Command": "exp_inc",
         "Result":"true",
     }
@@ -257,6 +258,9 @@ def file_write_result():
         return True
     else:
         return False
+
+def write_histogram()
+
         
 def write_report():  
 

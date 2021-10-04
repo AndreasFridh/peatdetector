@@ -258,9 +258,6 @@ def file_write_result():
     else:
         return False
 
-def write_histogram()
-    return true
-        
 def write_report():  
 
     result = peat_detector()

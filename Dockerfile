@@ -1,3 +1,4 @@
+# Base image
 FROM continuumio/miniconda3
 
 COPY . /tmp/

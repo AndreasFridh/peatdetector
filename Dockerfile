@@ -3,12 +3,21 @@ FROM dkimg/opencv:4.6.0-debian
 
 COPY . /tmp/
 
+RUN apt-get update
+RUN apt -y install udev dos2unix
+
 RUN pip3 install numpy flask wheel gunicorn matplotlib
 
 WORKDIR /tmp/assets/VimbaPython-master/
 
-RUN python setup.py install
-# Minimize image size 
+RUN python3 setup.py install
+
+# Install Vimba related stuffings
+
+WORKDIR /tmp/assets/
+
+RUN dos2unix Install.sh
+RUN bash Install.sh
 
 EXPOSE 5000
 

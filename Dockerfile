@@ -1,16 +1,15 @@
 # Base image
-FROM continuumio/miniconda3
+FROM dkimg/opencv:4.6.0-debian	
 
 COPY . /tmp/
 
-WORKDIR /tmp
+RUN pip3 install numpy flask wheel gunicorn matplotlib
 
-RUN conda env create --file /tmp/enviroment.yml
-SHELL ["/bin/bash", "--login", "-c"]
+WORKDIR /tmp/assets/VimbaPython-master/
 
-RUN echo "conda activate img_analysis" >> ~/.bashrc
+RUN python setup.py install
+# Minimize image size 
 
 EXPOSE 5000
 
-
-#CMD [ "/tmp/app/__init__.py" ]
+#CMD [ "python3 -m gunicorn --bind 0.0.0.0:5000 wsgi:app --chdir=/tmp/app" ]

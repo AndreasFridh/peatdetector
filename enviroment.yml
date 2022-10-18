@@ -8,4 +8,4 @@ dependencies:
   - pip:
     - opencv-python
     - wheel
-    - "/tmp/VimbaPython-master/"
+#    - "/tmp/VimbaPython-master/"

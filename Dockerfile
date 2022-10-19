@@ -16,6 +16,8 @@ RUN python3 setup.py install
 
 WORKDIR /tmp/assets/
 
+RUN ls
+
 RUN dos2unix Install.sh
 RUN bash Install.sh
 

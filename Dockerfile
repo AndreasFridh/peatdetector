@@ -6,11 +6,7 @@ COPY . /opt/
 RUN apt-get update
 RUN apt -y install udev dos2unix libopencv-dev python3 python3-pip
 
-RUN pip3 install numpy flask wheel gunicorn matplotlib opencv-python
-
-WORKDIR /opt/assets/VimbaPython-master/
-
-RUN python3 setup.py install
+RUN pip3 install numpy flask wheel gunicorn matplotlib opencv-contrib-python
 
 # Install Vimba related stuffings
 
@@ -20,6 +16,13 @@ RUN ls
 
 RUN dos2unix Install.sh
 RUN bash Install.sh
+
+# Install Vimba Python
+WORKDIR /opt/assets/VimbaPython-master/
+
+RUN git clone https://github.com/alliedvision/VimbaPython
+
+RUN python3 setup.py install
 
 EXPOSE 5000
 

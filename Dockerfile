@@ -1,12 +1,12 @@
 # Base image
-FROM dkimg/opencv:4.6.0-debian	
+FROM debian:9
 
 COPY . /opt/
 
 RUN apt-get update
-RUN apt -y install udev dos2unix
+RUN apt -y install udev dos2unix libopencv-dev python3 python3-pip
 
-RUN pip3 install numpy flask wheel gunicorn matplotlib
+RUN pip3 install numpy flask wheel gunicorn matplotlib opencv-python
 
 WORKDIR /opt/assets/VimbaPython-master/
 

@@ -1,21 +1,21 @@
 # Base image
 FROM debian:11-slim
+
+# Copy the files from the project to the image
 COPY . /opt/
-
-RUN apt-get update
-RUN apt-get --no-install-recommends -y install udev dos2unix libopencv-dev python3 python3-pip git
-
 WORKDIR /opt/
 
-RUN pip3 install -r Requirements.txt
+# Installing the tools for the work
+RUN apt-get update && apt-get --no-install-recommends -y install \
+    udev dos2unix libopencv-dev python3 python3-pip git && \
+    rm -rf /var/lib/apt/lists/* &&\
+    pip3 install -r Requirements.txt &&\
+    apt-get autoremove -y
 
 # Install Vimba related stuffings
 
 WORKDIR /opt/assets/
 
-RUN ls
-
-RUN dos2unix Install.sh
 RUN bash Install.sh
 
 # Install Vimba Python
@@ -25,8 +25,7 @@ WORKDIR /opt/assets/VimbaPython/
 
 RUN python3 setup.py install
 
-RUN rm -rf /var/lib/apt/lists/*
-
+# Show me the ports
 EXPOSE 5000
 
 #CMD [ "python3 -m gunicorn --bind 0.0.0.0:5000 wsgi:app --chdir=/opt/app" ]

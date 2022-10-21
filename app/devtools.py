@@ -10,9 +10,35 @@ from vimba import *
 from datetime import datetime
 from matplotlib import pyplot as plt
 
+def print_camera(cam: Camera):
+    print('/// Camera Name   : {}'.format(cam.get_name()))
+    print('/// Model Name    : {}'.format(cam.get_model()))
+    print('/// Camera ID     : {}'.format(cam.get_id()))
+    print('/// Serial Number : {}'.format(cam.get_serial()))
+    print('/// Interface ID  : {}\n'.format(cam.get_interface_id()))
+
 with Vimba.get_instance() as vimba:
+    print("Getting all cameras connectecd")
+
+    with Vimba.get_instance() as vimba:
     cams = vimba.get_all_cameras()
-    with cams[0] as cam:
-        frame = cam.get_frame()
-        frame.convert_pixel_format(PixelFormat.Mono8)
-        cv2.imwrite('frame.jpg', frame.as_opencv_image())
+
+    print('Cameras found: {}'.format(len(cams)))
+
+    for cam in cams:
+        print_camera(cam)
+
+    cams = vimba.get_all_cameras()
+    
+
+with cams[0] as cam:
+    print("With cam 0 running: ")
+    frame = cam.get_frame()
+
+    print("Getting frame, done.")
+
+    frame.convert_pixel_format(PixelFormat.Mono8)
+    print ("converting Vimba pixel format to Mono8, done")
+
+    cv2.imwrite('frame.jpg', frame.as_opencv_image())
+    print("Writing image file, done")

@@ -1,5 +1,5 @@
 # Base image
-FROM debian:9-slim
+FROM debian:11-slim
 COPY . /opt/
 
 RUN apt-get update
@@ -26,8 +26,6 @@ RUN ls
 RUN python3 setup.py install
 
 RUN rm -rf /var/lib/apt/lists/*
-
-RUN gunicorn --bind 0.0.0.0:5000 wsgi:app --chdir=/opt/app
 
 EXPOSE 5000
 

@@ -304,7 +304,10 @@ def grab_img():
         return True
     
 def grab_camera_frame():
+
     with Vimba.get_instance() as vimba:
+
+
         cams = vimba.get_all_cameras()
         with cams[0] as cam:
             frame = cam.get_frame()

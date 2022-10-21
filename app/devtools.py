@@ -32,7 +32,7 @@ with Vimba.get_instance() as vimba:
 
     with cams[0] as cam:
         try:
-            #cam.ExposureAuto.set('Continuous')
+            cam.ExposureAuto.set('Off')
             cam.ExposureTime.set(50000)
 
         except (AttributeError, VimbaFeatureError):

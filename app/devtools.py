@@ -32,6 +32,7 @@ with Vimba.get_instance() as vimba:
 # Comment 
     with cams[0] as cam:
         try:
+            cam.UserSetDefault('Default')
             cam.ExposureAuto.set('Once')
             #cam.ExposureTime.set(50000)
 
@@ -41,7 +42,7 @@ with Vimba.get_instance() as vimba:
         print("With cam 0 running: ")
         frame = cam.get_frame()
         cv2.imwrite('frame_raw.jpg', frame.as_opencv_image())
-        
+
         print("Getting frame, done.")
 
         frame.convert_pixel_format(PixelFormat.Mono8)

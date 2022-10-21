@@ -20,9 +20,9 @@ RUN bash Install.sh
 
 # Install Vimba Python
 RUN git clone https://github.com/alliedvision/VimbaPython
-RUN ls 
+
 WORKDIR /opt/assets/VimbaPython/
-RUN ls 
+
 RUN python3 setup.py install
 
 RUN rm -rf /var/lib/apt/lists/*

@@ -30,14 +30,14 @@ with Vimba.get_instance() as vimba:
     cams = vimba.get_all_cameras()
     
 
-with cams[0] as cam:
-    print("With cam 0 running: ")
-    frame = cam.get_frame()
+    with cams[0] as cam:
+        print("With cam 0 running: ")
+        frame = cam.get_frame()
 
-    print("Getting frame, done.")
+        print("Getting frame, done.")
 
-    frame.convert_pixel_format(PixelFormat.Mono8)
-    print ("converting Vimba pixel format to Mono8, done")
+        frame.convert_pixel_format(PixelFormat.Mono8)
+        print ("converting Vimba pixel format to Mono8, done")
 
-    cv2.imwrite('frame.jpg', frame.as_opencv_image())
-    print("Writing image file, done")
+        cv2.imwrite('frame.jpg', frame.as_opencv_image())
+        print("Writing image file, done")

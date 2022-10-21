@@ -32,8 +32,8 @@ with Vimba.get_instance() as vimba:
 # Comment 
     with cams[0] as cam:
         try:
-            cam.ExposureAuto.set('Off')
-            cam.ExposureTime.set(50000)
+            cam.ExposureAuto.set('Once')
+            #cam.ExposureTime.set(50000)
 
         except (AttributeError, VimbaFeatureError):
             pass

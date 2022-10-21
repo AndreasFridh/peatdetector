@@ -20,7 +20,6 @@ def print_camera(cam: Camera):
 with Vimba.get_instance() as vimba:
     print("Getting all cameras connectecd")
 
-    with Vimba.get_instance() as vimba:
     cams = vimba.get_all_cameras()
 
     print('Cameras found: {}'.format(len(cams)))
@@ -31,9 +30,9 @@ with Vimba.get_instance() as vimba:
     cams = vimba.get_all_cameras()
     
 
-with cams[0] as cam:
+with cams[0] as camera:
     print("With cam 0 running: ")
-    frame = cam.get_frame()
+    frame = camera.get_frame()
 
     print("Getting frame, done.")
 

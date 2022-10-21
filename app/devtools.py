@@ -35,7 +35,7 @@ with Vimba.get_instance() as vimba:
             print(cam.ChunkOffsetX())
             cam.ExposureAuto.set('Once')
             #cam.ExposureTime.set(50000)
-            
+
             print("With cam 0 running: ")
             frame = cam.get_frame()
             cv2.imwrite('frame_raw.jpg', frame.as_opencv_image())
@@ -47,7 +47,9 @@ with Vimba.get_instance() as vimba:
 
             cv2.imwrite('frame.jpg', frame.as_opencv_image())
             print("Writing image file, done")
+
         except (AttributeError, VimbaFeatureError):
+            print(VimbaFeatureError)
             pass
         
 

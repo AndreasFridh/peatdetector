@@ -30,9 +30,9 @@ with Vimba.get_instance() as vimba:
     cams = vimba.get_all_cameras()
     
 
-with cams[0] as camera:
+with cams[0] as cam:
     print("With cam 0 running: ")
-    frame = camera.get_frame()
+    frame = cam.get_frame()
 
     print("Getting frame, done.")
 

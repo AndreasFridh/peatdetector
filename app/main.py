@@ -14,7 +14,7 @@ from datetime import datetime
 from matplotlib import pyplot as plt
 
 app = Flask(__name__)
-port = 5555
+port = 5000
 
 # Analysis reponse class, variable names should be documents enough to understand this.
 class analysisResponse():

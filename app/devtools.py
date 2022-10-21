@@ -32,7 +32,7 @@ with Vimba.get_instance() as vimba:
 # Comment 
     with cams[0] as cam:
         try:
-            cam.UserSetDefault('Default')
+            cam.UserSetDefault()
             cam.ExposureAuto.set('Once')
             #cam.ExposureTime.set(50000)
 

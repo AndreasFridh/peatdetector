@@ -1,0 +1,6 @@
+numpy 
+flask 
+wheel 
+gunicorn 
+matplotlib 
+opencv-contrib-python

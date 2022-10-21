@@ -1,12 +1,13 @@
 # Base image
-FROM debian:9
-
+FROM debian:9-slim
 COPY . /opt/
 
 RUN apt-get update
-RUN apt -y install udev dos2unix libopencv-dev python3 python3-pip
+RUN apt-get --no-install-recommends -y install udev dos2unix libopencv-dev python3 python3-pip git
 
-RUN pip3 install numpy flask wheel gunicorn matplotlib opencv-contrib-python
+WORKDIR /opt/
+
+RUN pip3 install -r Requirements.txt
 
 # Install Vimba related stuffings
 
@@ -18,11 +19,15 @@ RUN dos2unix Install.sh
 RUN bash Install.sh
 
 # Install Vimba Python
-WORKDIR /opt/assets/VimbaPython-master/
-
 RUN git clone https://github.com/alliedvision/VimbaPython
-
+RUN ls 
+WORKDIR /opt/assets/VimbaPython/
+RUN ls 
 RUN python3 setup.py install
+
+RUN rm -rf /var/lib/apt/lists/*
+
+RUN gunicorn --bind 0.0.0.0:5000 wsgi:app --chdir=/opt/app
 
 EXPOSE 5000
 

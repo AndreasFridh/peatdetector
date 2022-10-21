@@ -35,20 +35,19 @@ with Vimba.get_instance() as vimba:
             print(cam.ChunkOffsetX())
             cam.ExposureAuto.set('Once')
             #cam.ExposureTime.set(50000)
+            
+            print("With cam 0 running: ")
+            frame = cam.get_frame()
+            cv2.imwrite('frame_raw.jpg', frame.as_opencv_image())
+            
+            print("Getting frame, done.")
 
+            frame.convert_pixel_format(PixelFormat.Mono8)
+            print ("converting Vimba pixel format to Mono8, done")
+
+            cv2.imwrite('frame.jpg', frame.as_opencv_image())
+            print("Writing image file, done")
         except (AttributeError, VimbaFeatureError):
             pass
         
-        print("With cam 0 running: ")
-        frame = cam.get_frame()
-        cv2.imwrite('frame_raw.jpg', frame.as_opencv_image())
-        
-        print(cam.StatFramesUnderrun())
 
-        print("Getting frame, done.")
-
-        frame.convert_pixel_format(PixelFormat.Mono8)
-        print ("converting Vimba pixel format to Mono8, done")
-
-        cv2.imwrite('frame.jpg', frame.as_opencv_image())
-        print("Writing image file, done")

@@ -36,7 +36,7 @@ with Vimba.get_instance() as vimba:
 
         print("Getting frame, done.")
 
-        frame.convert_pixel_format(PixelFormat.Mono8)
+        frame.convert_pixel_format(VmbPixelFormat.Mono10)
         print ("converting Vimba pixel format to Mono8, done")
 
         cv2.imwrite('frame.jpg', frame.as_opencv_image())

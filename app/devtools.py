@@ -29,7 +29,7 @@ with Vimba.get_instance() as vimba:
 
     cams = vimba.get_all_cameras()
     
-
+# Comment 
     with cams[0] as cam:
         try:
             cam.ExposureAuto.set('Off')

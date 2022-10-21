@@ -32,7 +32,7 @@ with Vimba.get_instance() as vimba:
 # Comment 
     with cams[0] as cam:
         try:
-            #cam.UserSetDefault()
+            print(cam.ChunkOffsetX())
             cam.ExposureAuto.set('Once')
             #cam.ExposureTime.set(50000)
 

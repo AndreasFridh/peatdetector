@@ -29,8 +29,7 @@ with Vimba.get_instance() as vimba:
 
     with cams[0] as cam:
         # print(cam.ChunkOffsetX())
-        cam.ExposureAuto.set("Continuous")
-        cam.ExposureAutoTarget.set(20000)
+        cam.ExposureAuto.set("Once")
         #cam.ExposureTime.set(50000)
 
         print("With cam 0 running: ")

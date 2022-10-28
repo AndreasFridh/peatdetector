@@ -27,8 +27,6 @@ with Vimba.get_instance() as vimba:
     for cam in cams:
         print_camera(cam)
 
-    with cam:
-
     try:
         cam.GVSPAdjustPacketSize.run()
         while not cam.GVSPAdjustPacketSize.is_done():

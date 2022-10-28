@@ -27,8 +27,24 @@ with Vimba.get_instance() as vimba:
     for cam in cams:
         print_camera(cam)
 
-    cams = vimba.get_all_cameras()
-    
+    with cam:
+
+    try:
+        cam.GVSPAdjustPacketSize.run()
+        while not cam.GVSPAdjustPacketSize.is_done():
+            pass
+    except (AttributeError, VimbaFeatureError):
+        pass
+
+    try:
+        cam.ExposureAuto.set("Continuous")
+    except (AttributeError, VimbaFeatureError):
+        pass
+    try:
+        cam.ExposureAutoTarget.set(35)
+    except (AttributeError, VimbaFeatureError):
+        pass
+
     with cams[0] as cam:
         try:
             # print(cam.ChunkOffsetX())

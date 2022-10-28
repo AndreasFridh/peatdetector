@@ -35,7 +35,7 @@ with Vimba.get_instance() as vimba:
         print(cam.ReverseY)
         cam.ReverseY = True
         print(cam.ReverseY)
-
+        cam.ReverseX = True
         cam.ExposureAuto.set("Once")
         #cam.ExposureTime.set(50000)
 

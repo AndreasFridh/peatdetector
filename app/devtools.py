@@ -1,3 +1,4 @@
+from operator import truediv
 import cv2
 import math
 import numpy as np;
@@ -5,6 +6,8 @@ import matplotlib
 import io
 import getpass
 
+from typing import Tuple
+ 
 from vimba import *
 
 from datetime import datetime
@@ -29,7 +32,7 @@ with Vimba.get_instance() as vimba:
 
     with cams[0] as cam:
         # print(cam.ChunkOffsetX())
-        cam.ReverseY(VmbBool(True))
+        cam.ReverseY(True)
         cam.ExposureAuto.set("Once")
         #cam.ExposureTime.set(50000)
 

@@ -31,26 +31,25 @@ with Vimba.get_instance() as vimba:
         print_camera(cam)
 
     with cams[0] as cam:
-        # print(cam.ChunkOffsetX())
-        print(cam.DeviceTemperature)
-        print(cam.ReverseY)
-        cam.ReverseY = True
-
-        print(cam.ReverseY)
-        cam.ReverseX = True
-
         cam.ExposureAuto.set("Once")
         #cam.ExposureTime.set(50000)
 
-        print("With cam 0 running: ")
+        print(cam.DeviceTemperature)
+        
+        print("Getting normal image ")
         frame = cam.get_frame()
-        cv2.imwrite('frame_raw.jpg', frame.as_opencv_image())
+        cv2.imwrite('frame normal.jpg', frame.as_opencv_image())
 
-        print("Getting frame, done.")
+        print("Reversing Y")
 
-        frame.convert_pixel_format(PixelFormat.Mono8)
-        print ("converting Vimba pixel format to Mono8, done")
+        cam.ReverseY = True
 
-        cv2.imwrite('frame.jpg', frame.as_opencv_image())
-        print("Writing image file, done")
+        frame = cam.get_frame()
+        cv2.imwrite('frame reverse.jpg', frame.as_opencv_image())
+        
+        print("Done")
+
+
+
+
 

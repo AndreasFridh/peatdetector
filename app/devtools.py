@@ -28,27 +28,21 @@ with Vimba.get_instance() as vimba:
         print_camera(cam)
 
     with cams[0] as cam:
-        try:
-            # print(cam.ChunkOffsetX())
-            cam.GVSPAdjustPacketSize.run()
-            cam.ExposureAuto.set("Continuous")
-            cam.ExposureAutoTarget.set(20000)
-            #cam.ExposureTime.set(50000)
+        # print(cam.ChunkOffsetX())
+        cam.GVSPAdjustPacketSize.run()
+        cam.ExposureAuto.set("Continuous")
+        cam.ExposureAutoTarget.set(20000)
+        #cam.ExposureTime.set(50000)
 
-            print("With cam 0 running: ")
-            frame = cam.get_frame()
-            cv2.imwrite('frame_raw.jpg', frame.as_opencv_image())
-            
-            print("Getting frame, done.")
+        print("With cam 0 running: ")
+        frame = cam.get_frame()
+        cv2.imwrite('frame_raw.jpg', frame.as_opencv_image())
 
-            frame.convert_pixel_format(PixelFormat.Mono8)
-            print ("converting Vimba pixel format to Mono8, done")
+        print("Getting frame, done.")
 
-            cv2.imwrite('frame.jpg', frame.as_opencv_image())
-            print("Writing image file, done")
+        frame.convert_pixel_format(PixelFormat.Mono8)
+        print ("converting Vimba pixel format to Mono8, done")
 
-        except (AttributeError, VimbaFeatureError):
-            print(AttributeError)
-            pass
-        
+        cv2.imwrite('frame.jpg', frame.as_opencv_image())
+        print("Writing image file, done")
 

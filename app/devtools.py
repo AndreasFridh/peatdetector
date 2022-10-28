@@ -34,6 +34,8 @@ with Vimba.get_instance() as vimba:
         # print(cam.ChunkOffsetX())
         print(cam.ReverseY)
         cam.ReverseY = True
+        print(cam.ReverseY)
+
         cam.ExposureAuto.set("Once")
         #cam.ExposureTime.set(50000)
 

@@ -27,26 +27,12 @@ with Vimba.get_instance() as vimba:
     for cam in cams:
         print_camera(cam)
 
-    try:
-        cam.GVSPAdjustPacketSize.run()
-        while not cam.GVSPAdjustPacketSize.is_done():
-            pass
-    except (AttributeError, VimbaFeatureError):
-        pass
-
-    try:
-        cam.ExposureAuto.set("Continuous")
-    except (AttributeError, VimbaFeatureError):
-        pass
-    try:
-        cam.ExposureAutoTarget.set(35)
-    except (AttributeError, VimbaFeatureError):
-        pass
-
     with cams[0] as cam:
         try:
             # print(cam.ChunkOffsetX())
-            cam.ExposureAuto.set('Once')
+            cam.GVSPAdjustPacketSize.run()
+            cam.ExposureAuto.set("Continuous")
+            cam.ExposureAutoTarget.set(20000)
             #cam.ExposureTime.set(50000)
 
             print("With cam 0 running: ")

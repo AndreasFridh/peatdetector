@@ -32,10 +32,13 @@ with Vimba.get_instance() as vimba:
 
     with cams[0] as cam:
         # print(cam.ChunkOffsetX())
+        print(cam.DeviceTemperature)
         print(cam.ReverseY)
         cam.ReverseY = True
+
         print(cam.ReverseY)
         cam.ReverseX = True
+
         cam.ExposureAuto.set("Once")
         #cam.ExposureTime.set(50000)
 

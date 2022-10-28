@@ -48,7 +48,7 @@ with Vimba.get_instance() as vimba:
             print("Writing image file, done")
 
         except (AttributeError, VimbaFeatureError):
-            print(VimbaFeatureError)
+            print(AttributeError)
             pass
         
 

@@ -29,7 +29,6 @@ with Vimba.get_instance() as vimba:
 
     with cams[0] as cam:
         # print(cam.ChunkOffsetX())
-        cam.GVSPAdjustPacketSize.run()
         cam.ExposureAuto.set("Continuous")
         cam.ExposureAutoTarget.set(20000)
         #cam.ExposureTime.set(50000)

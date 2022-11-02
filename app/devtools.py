@@ -1,3 +1,4 @@
+from email.policy import default
 from operator import truediv
 import cv2
 import math
@@ -31,6 +32,7 @@ with Vimba.get_instance() as vimba:
         print_camera(cam)
 
     with cams[0] as cam:
+        cam.UserSetDefaul(default)
         cam.ExposureAuto.set("Once")
         #cam.ExposureTime.set(50000)
 
@@ -46,7 +48,7 @@ with Vimba.get_instance() as vimba:
 
         frame = cam.get_frame()
         cv2.imwrite('frame reverse.jpg', frame.as_opencv_image())
-        
+
         print("Done")
 
 

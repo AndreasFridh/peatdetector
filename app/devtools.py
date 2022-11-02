@@ -32,6 +32,7 @@ with Vimba.get_instance() as vimba:
         print_camera(cam)
 
     with cams[0] as cam:
+        cam.AcquisitionMode(SingleFrame)
         cam.ExposureAuto.set("Once")
         #cam.ExposureTime.set(50000) 
 

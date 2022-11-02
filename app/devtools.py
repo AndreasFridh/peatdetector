@@ -33,7 +33,7 @@ with Vimba.get_instance() as vimba:
 
     with cams[0] as cam:
         cam.ExposureAuto.set("Once")
-        #cam.ExposureTime.set(50000)
+        #cam.ExposureTime.set(50000) 
 
         print(cam.DeviceTemperature)
         

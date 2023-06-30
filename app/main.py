@@ -99,7 +99,8 @@ def generate_report():
 
 @app.route('/generate_report_pdf')
 def generate_report_pdf():
-    return send_file write_report()
+        send_file write_report()
+    return 1
 
 
 @app.route('/exp_show')

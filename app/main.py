@@ -99,13 +99,7 @@ def generate_report():
 
 @app.route('/generate_report_pdf')
 def generate_report_pdf():
-    if id is not None:
-        binary_pdf = get_binary_pdf_data_from_database(id=id)
-        response = make_response(binary_pdf)
-        response.headers['Content-Type'] = 'application/pdf'
-        response.headers['Content-Disposition'] = \
-            'inline; filename=%s.pdf' % 'yourfilename'
-        return response
+    return send_file write_report()
 
 
 @app.route('/exp_show')
@@ -290,7 +284,7 @@ def write_report():
 
     plt.savefig(filename) 
 
-    return True
+    return filename
 
 
 def grab_img():

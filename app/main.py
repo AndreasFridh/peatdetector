@@ -337,7 +337,7 @@ def camera_ctrl_exp_inc():
         with cams[0] as cam:
             #exposure_time = cam.ExposureTime
             cam.ExposureAuto.set('Continuous')
-	    time = exposure_time.get()
+	        time = exposure_time.get()
             inc = exposure_time.get_increment()
             #exposure_time.set(time + 200*inc)
     return (time + inc)

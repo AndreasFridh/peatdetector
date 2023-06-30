@@ -1,4 +1,4 @@
-#Update : 2021-10-03
+#Update : 2023-06-30
 
 import cv2
 import math
@@ -335,10 +335,11 @@ def camera_ctrl_exp_inc():
     with Vimba.get_instance() as vimba:
         cams = vimba.get_all_cameras()
         with cams[0] as cam:
-            exposure_time = cam.ExposureTime
-            time = exposure_time.get()
+            #exposure_time = cam.ExposureTime
+            cam.ExposureAuto.set('Continuous')
+	    time = exposure_time.get()
             inc = exposure_time.get_increment()
-            exposure_time.set(time + 200*inc)
+            #exposure_time.set(time + 200*inc)
     return (time + inc)
 
 def camera_ctrl_exp_custom(new_exp):

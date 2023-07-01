@@ -99,10 +99,10 @@ def generate_report():
 
 @app.route('/generate_report_pdf')
 def generate_report_pdf():
-    if write_report() is not None
+    if write_report() is not ""
         return {
             "Command": "generate_report_pdf",
-            "Result":"true",
+            "Result":"true"
         }
 
 
@@ -117,7 +117,7 @@ def exp_dec():
     return {
         "Exp time": str(camera_ctrl_exp_dec()),
         "Command": "exp_dec",
-        "Result":"true",
+        "Result":"true"
     }
 @app.route('/exp_inc')
 def exp_inc():

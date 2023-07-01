@@ -99,11 +99,10 @@ def generate_report():
 
 @app.route('/generate_report_pdf')
 def generate_report_pdf():
-    if write_report()
-        return {
-            "Command": "generate_report_pdf",
-            "Result":"true"
-        }
+    return {
+        "Command": "generate_report_pdf",
+        "Result": write_report()
+    }
 
 
 @app.route('/exp_show')

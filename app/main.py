@@ -57,8 +57,7 @@ def get_img():
             'frame.jpg',
             mimetype='image/jpg',
             attachment_filename='snapshot.jpg',
-            cache_timeout=0
-        ), 200
+        )
     else:
         return "Image not grabbed ok"
 

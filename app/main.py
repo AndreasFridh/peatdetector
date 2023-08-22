@@ -247,6 +247,7 @@ def file_write_result():
         plt.imshow(images.bw,cmap='gist_gray')
 
         plt.savefig(filename) 
+        print("Image and text combined. File ist stored as result.png")
 
         return True
     else:

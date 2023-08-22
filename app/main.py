@@ -51,8 +51,10 @@ def run_analysis():
 
 @app.route('/get_img')
 def get_img():
-    if file_write_result() == True: 
-        return send_file(
+	print ("Getting img")
+	if file_write_result() == True: 
+        	print("File write success")
+		return send_file(
                     'frame.jpg',
                     mimetype='image/jpg',
                     attachment_filename='snapshot.jpg',

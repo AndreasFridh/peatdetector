@@ -60,6 +60,15 @@ def get_img():
 	), 200
     else:
         return "Image not grabbed ok"
+	    
+@app.route('/get_last_img')
+def get_last_img():
+    print ("Sending last img")
+    return send_file(
+        'frame.jpg',
+        mimetype='image/jpg',
+        download_name='snapshot.jpg'
+    ), 200
 
 @app.route('/get_mask')
 def get_mask():

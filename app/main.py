@@ -238,7 +238,8 @@ def peat_detector():
         return None
 
 def file_write_result():
-    if grab_img() == True: 
+    if grab_img() == True:
+        print("Starting to combine text and image")
         filename = "result.png"
 
         fig=plt.figure(figsize=(25, 25))

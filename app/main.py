@@ -60,7 +60,7 @@ def get_img():
             cache_timeout=0
         ), 200
     else:
-    return "Image not grabbed ok"
+        return "Image not grabbed ok"
 
 @app.route('/get_mask')
 def get_mask():

@@ -56,8 +56,9 @@ def get_img():
         return send_file(
             'frame.jpg',
             mimetype='image/jpg',
-            attachment_filename='snapshot.jpg',
-        )
+            download_name='snapshot.jpg',
+            cache_timeout=0
+	), 200
     else:
         return "Image not grabbed ok"
 
@@ -66,7 +67,7 @@ def get_mask():
     return send_file(
                 'mask.jpg',
                 mimetype='image/jpg',
-                attachment_filename='snapshot.jpg',
+                download_name='snapshot.jpg',
                 cache_timeout=0
             ), 200
 
@@ -76,7 +77,7 @@ def get_result():
         return send_file(
                     'result.png',
                     mimetype='image/png',
-                    attachment_filename='snapshot.png',
+                    download_name='snapshot.png',
                     cache_timeout=0
                 ), 200
 

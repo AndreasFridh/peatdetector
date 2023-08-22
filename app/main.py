@@ -62,7 +62,6 @@ def get_img():
     	else:
         return "Image not grabbed ok"
 
-
 @app.route('/get_mask')
 def get_mask():
     return send_file(

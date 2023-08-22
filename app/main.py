@@ -101,7 +101,6 @@ def generate_report_pdf():
         "Result": write_report()
     }
 
-
 @app.route('/exp_show')
 def exp_show():
     return {
@@ -304,6 +303,7 @@ def grab_camera_frame():
             frame = cam.get_frame()
             frame.convert_pixel_format(PixelFormat.Mono8)
             cv2.imwrite('frame.jpg', frame.as_opencv_image())
+            print("Image grabbed ok. Saved as frame.jpg")
     return True
 
 # Functions to handle camera settings

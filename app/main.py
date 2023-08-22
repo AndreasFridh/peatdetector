@@ -51,16 +51,16 @@ def run_analysis():
 
 @app.route('/get_img')
 def get_img():
-	print ("Getting img")
-	if file_write_result() == True: 
-		return send_file(
-                   'frame.jpg',
-                    mimetype='image/jpg',
-                    attachment_filename='snapshot.jpg',
-                    cache_timeout=0
-                ), 200
-    	else:
-        return "Image not grabbed ok"
+    print ("Getting img")
+    if file_write_result() == True: 
+        return send_file(
+            'frame.jpg',
+            mimetype='image/jpg',
+            attachment_filename='snapshot.jpg',
+            cache_timeout=0
+        ), 200
+    else:
+    return "Image not grabbed ok"
 
 @app.route('/get_mask')
 def get_mask():

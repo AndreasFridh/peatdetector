@@ -59,7 +59,7 @@ def get_img():
                     attachment_filename='snapshot.jpg',
                     cache_timeout=0
                 ), 200
-    else:
+    	else:
         return "Image not grabbed ok"
 
 

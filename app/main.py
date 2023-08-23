@@ -118,6 +118,7 @@ def exp_show():
 
 @app.route('/exp_dec')
 def exp_dec():
+    print ("Request: exp_dec")
     return {
         "Exp time": str(camera_ctrl_exp_dec()),
         "Command": "exp_dec",
@@ -125,6 +126,7 @@ def exp_dec():
     }
 @app.route('/exp_inc')
 def exp_inc():
+    print ("Request: exp_inc")
     return {
         "Exp time": str(camera_ctrl_exp_inc()),
         "Command": "exp_inc",

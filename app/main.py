@@ -94,10 +94,11 @@ def get_result():
 @app.route('/generate_report')
 def generate_report():
     if write_report() == True: 
-            return {
-            "Command": "generate_report",
-            "Result":"true",
-    }
+        return send_file(
+                'report.png',
+                mimetype='image/png',
+                download_name='report.png'
+            ), 200
     else: 
             return {
             "Command": "generate_report",
@@ -254,7 +255,7 @@ def file_write_result():
         images.raw = cv2.imread("frame.jpg")
         apply_text(images.raw,200,200,"Hej hej")
         cv2.imwrite('frame_info.jpg', images.raw.as_opencv_image())
-        
+
         return True
     else:
         return False
@@ -287,8 +288,8 @@ def write_report():
     fig.add_subplot(rows, columns, 4)
     plt.imshow(images.analysed)
 
-    filename = "Image Analyis Peat Detection Report " + now.strftime("%Y %m %d T%H-%M-%S")
-
+    #filename = "Image Analyis Peat Detection Report " + now.strftime("%Y %m %d T%H-%M-%S")
+    filename = "report.png"
     plt.savefig(filename) 
 
     return filename

@@ -40,6 +40,7 @@ def run_analysis():
     
     result = peat_detector()
     
+
     return {
         "Command": "run_analysis",
         "Result":"true",
@@ -82,9 +83,9 @@ def get_mask():
 def get_result():
     if file_write_result() == True: 
         return send_file(
-                    'result.png',
-                    mimetype='image/png',
-                    download_name='snapshot.png'
+                    'frame.jpg',
+                    mimetype='image/jpg',
+                    download_name='snapshot.jpg'
                 ), 200
 
     else: 

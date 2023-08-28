@@ -105,12 +105,6 @@ def generate_report():
             "Result":"false",
     }
 
-@app.route('/generate_report_pdf')
-def generate_report_pdf():
-    return {
-        "Command": "generate_report_pdf",
-        "Result": write_report()
-    }
 
 @app.route('/exp_show')
 def exp_show():
@@ -292,7 +286,7 @@ def write_report():
     filename = "report.png"
     plt.savefig(filename) 
 
-    return filename
+    return True
 
 
 def grab_img():

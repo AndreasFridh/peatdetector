@@ -251,6 +251,10 @@ def peat_detector():
 
 def file_write_result():
     if grab_img() == True:
+        images.raw = cv2.imread("frame.jpg")
+        apply_text(images.raw,200,200,"Hej hej")
+        cv2.imwrite('frame_info.jpg', images.raw.as_opencv_image())
+        
         return True
     else:
         return False

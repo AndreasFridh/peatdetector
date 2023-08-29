@@ -108,9 +108,9 @@ def get_result():
 def generate_report():
     print("Generate report running")
 
-    if write_report() == True: 
-        print("Generate report running")
-        return {"OK"}
+    write_report() 
+    
+    return {"OK"}
 
 
 @app.route('/exp_show')

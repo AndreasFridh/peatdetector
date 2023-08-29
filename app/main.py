@@ -26,12 +26,13 @@ class analysisResponse():
         self.largest_blob_pos_y = largest_blob_pos_y
 
 class images():
-    def __init__(self,img_raw=None,img_bw=None,img_mask=None,img_masked=None, img_analysed=None):
+    def __init__(self,img_raw=None,img_bw=None,img_mask=None,img_masked=None, img_analysed=None, img_filtered = None):
         self.raw = img_raw
         self.bw = img_bw
         self.mask = img_mask
         self.masked = img_masked
         self.analysed = img_analysed
+        self.filtered = img_filtered
 
 images = images()
 
@@ -207,8 +208,11 @@ def peat_detector():
         detector = cv2.SimpleBlobDetector_create(params)
 
         keypoints = detector.detect(images.masked)
+        
+        images.filtered = cv2.filter2D(src=images.raw, ddepth=-1, kernel=kernel2)
 
-        images.analysed = cv2.drawKeypoints(images.raw, keypoints, np.array([]), (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+
+        images.analysed = cv2.drawKeypoints(images.filtered, keypoints, np.array([]), (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
         if keypoints:
             print("Blobs FOUND")

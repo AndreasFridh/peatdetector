@@ -61,6 +61,18 @@ def get_img():
 	), 200
     else:
         return "Image not grabbed ok"
+    
+@app.route('/get_img_masked')
+def get_img():
+    print ("Getting img")
+    if grab_masked() == True: 
+        return send_file(
+            'frame.jpg',
+            mimetype='image/jpg',
+            download_name='snapshot.jpg'
+	), 200
+    else:
+        return "Image not grabbed ok"
 	    
 @app.route('/get_last_img')
 def get_last_img():
@@ -292,7 +304,7 @@ def write_report():
     return True
 
 
-def grab_img():
+def grab_masked():
     if grab_camera_frame() == True:
         images.raw = cv2.imread("frame.jpg")
         images.bw = cv2.cvtColor(images.raw , cv2.COLOR_BGR2RGB)

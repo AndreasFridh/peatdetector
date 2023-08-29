@@ -209,7 +209,7 @@ def peat_detector():
 
         keypoints = detector.detect(images.masked)
         
-        images.filtered = cv2.filter2D(src=images.raw, ddepth=-1, kernel=kernel2)
+        images.filtered = cv2.blur(src=images.raw, ksize=(5,5))
 
 
         images.analysed = cv2.drawKeypoints(images.filtered, keypoints, np.array([]), (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)

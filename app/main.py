@@ -110,9 +110,9 @@ def generate_report():
 
     write_report() 
     return send_file(
-                'report.jpg',
-                mimetype='image/jpg',
-                download_name='report.jpg'
+                'report.png',
+                mimetype='image/png',
+                download_name='report.png'
             ), 200
 
 

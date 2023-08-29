@@ -108,10 +108,12 @@ def get_result():
 def generate_report():
     print("Generate report running")
     if write_report() == True: 
+        print("Generate report running")
+
         return send_file(
-                'report.png',
-                mimetype='image/png',
-                download_name='report.png'
+                'report.jpg',
+                mimetype='image/jpg',
+                download_name='report.jpg'
             ), 200
     else: 
             return {
@@ -317,6 +319,12 @@ def write_report():
     
     filename = "report.png"
     plt.savefig(filename) 
+    print("Saving report result file as report.png")
+
+    # Use CV2 to convert the image from PNG to JPG (Transfer)
+    image = cv2.imread('report.png')
+    cv2.imwrite('report.jpg', image, [int(cv2.IMWRITE_JPEG_QUALITY), 100])
+    print("Saving report result file as report.jpg")
 
     return True
 

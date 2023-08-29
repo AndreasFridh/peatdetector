@@ -107,7 +107,7 @@ def get_result():
 @app.route('/generate_report')
 def generate_report():
     print("Generate report running")
-    
+
     if write_report() == True: 
         print("Generate report running")
         return {"OK"}
@@ -310,6 +310,8 @@ def write_report():
     
     filename = "report.png"
     plt.savefig(filename) 
+    
+    plt.close("all")
 
     print("Saving report result file as report.png")
 

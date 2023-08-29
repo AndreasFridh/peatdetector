@@ -109,11 +109,11 @@ def generate_report():
     print("Generate report running")
 
     write_report() 
-    
-    return {
-        "Command": "generate_report",
-        "Result":"true"
-    }
+    return send_file(
+                'report.jpg',
+                mimetype='image/jpg',
+                download_name='report.jpg'
+            ), 200
 
 
 @app.route('/exp_show')

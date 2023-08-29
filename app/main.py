@@ -63,7 +63,7 @@ def get_img():
         return "Image not grabbed ok"
     
 @app.route('/get_img_masked')
-def get_img():
+def get_img_masked():
     print ("Getting img")
     if grab_masked() == True: 
         return send_file(

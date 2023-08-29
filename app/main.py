@@ -107,19 +107,10 @@ def get_result():
 @app.route('/generate_report')
 def generate_report():
     print("Generate report running")
+    
     if write_report() == True: 
         print("Generate report running")
-
-        return {
-            "Command": "generate_report",
-            "Result":"true",
-        }
-    
-    else: 
-            return {
-            "Command": "generate_report",
-            "Result":"false",
-    }
+        return {"OK"}
 
 
 @app.route('/exp_show')
@@ -319,6 +310,7 @@ def write_report():
     
     filename = "report.png"
     plt.savefig(filename) 
+
     print("Saving report result file as report.png")
 
     return True

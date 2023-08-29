@@ -288,8 +288,11 @@ def write_report():
 
     text = 'Tracked target: ' + now.strftime("%Y %m %d T%H-%M-%S")
 
+    print("Adding text to image")
+    
     apply_text(images.analysed,int(result.largest_blob_pos_x) + int(result.largest_blob_size), int(result.largest_blob_pos_y)- int(result.largest_blob_size),text)
 
+    print("Adding shapes to report")
 
     fig=plt.figure(figsize=(25, 25))
     plt.title('Automatic Peat detector image analysis result report')
@@ -309,6 +312,9 @@ def write_report():
     plt.imshow(images.analysed)
 
     #filename = "Image Analyis Peat Detection Report " + now.strftime("%Y %m %d T%H-%M-%S")
+
+    print("Saving report result file as report.png")
+    
     filename = "report.png"
     plt.savefig(filename) 
 

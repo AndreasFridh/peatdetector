@@ -67,7 +67,7 @@ def get_img_masked():
     print ("Getting img")
     if grab_masked() == True: 
         return send_file(
-            'frame.jpg',
+            'frame_masked.jpg',
             mimetype='image/jpg',
             download_name='snapshot.jpg'
 	), 200
@@ -185,7 +185,7 @@ def apply_text(img,x,y,text):
 def peat_detector():
     print("Peat detector running:")
 
-    if grab_img() == True :
+    if grab_camera_frame() == True :
         print("Running analysis")
         result = analysisResponse()
 
@@ -305,6 +305,7 @@ def write_report():
 
 
 def grab_masked():
+    print("Grab image masked")
     if grab_camera_frame() == True:
         images.raw = cv2.imread("frame.jpg")
         images.bw = cv2.cvtColor(images.raw , cv2.COLOR_BGR2RGB)
@@ -312,7 +313,11 @@ def grab_masked():
 
         images.masked = cv2.bitwise_and(images.bw,images.bw,  mask = images.mask)
         
+        cv2.imwrite('frame_masked.jpg', images.masked)
+
         return True
+    else:
+        return False
     
 def grab_camera_frame():
     with Vimba.get_instance() as vimba:

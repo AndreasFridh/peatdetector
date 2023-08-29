@@ -96,9 +96,9 @@ def get_result():
     print("Running Get_result")
     if file_write_result() == True: 
         return send_file(
-                    'frame_text.jpg',
-                    mimetype='image/jpg',
-                    download_name='snapshot.jpg'
+                    'report.png',
+                    mimetype='image/png',
+                    download_name='report.png'
                 ), 200
 
     else: 

@@ -191,10 +191,9 @@ def peat_detector():
         params = cv2.SimpleBlobDetector_Params()
 
         params.filterByArea = True
-        params.minArea = 500
+        params.minArea = 5000
         params.maxArea = 100000
         params.filterByCircularity = False
-        params.filterByColor = False
         params.filterByConvexity = True
 
         params.minConvexity = 0.4

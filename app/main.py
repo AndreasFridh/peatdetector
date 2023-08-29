@@ -105,8 +105,8 @@ def get_result():
         return "Image not grabbed ok"
 
 @app.route('/generate_report')
-print("Generate report running")
 def generate_report():
+    print("Generate report running")
     if write_report() == True: 
         return send_file(
                 'report.png',

@@ -93,9 +93,10 @@ def get_mask():
 
 @app.route('/get_result')
 def get_result():
+    print("Running Get_result")
     if file_write_result() == True: 
         return send_file(
-                    'frame.jpg',
+                    'frame_text.jpg',
                     mimetype='image/jpg',
                     download_name='snapshot.jpg'
                 ), 200
@@ -185,7 +186,7 @@ def apply_text(img,x,y,text):
 def peat_detector():
     print("Peat detector running:")
 
-    if grab_camera_frame() == True :
+    if grab_masked() == True :
         print("Running analysis")
         result = analysisResponse()
 
@@ -262,7 +263,7 @@ def file_write_result():
     if grab_camera_frame() == True:
         images.raw = cv2.imread("frame.jpg")
         apply_text(images.raw,200,200,"Hej hej")
-        cv2.imwrite('frame_info.jpg', images.raw.as_opencv_image())
+        cv2.imwrite('frame_text.jpg', images.raw)
 
         return True
     else:

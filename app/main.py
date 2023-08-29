@@ -105,6 +105,7 @@ def get_result():
         return "Image not grabbed ok"
 
 @app.route('/generate_report')
+print("Generate report running")
 def generate_report():
     if write_report() == True: 
         return send_file(
@@ -249,6 +250,7 @@ def peat_detector():
             result.largest_blob_size = largest_blob_size
             result.largest_blob_pos_x = largest_blob_pos_x
             result.largest_blob_pos_y = largest_blob_pos_y
+            print("Peat detector done:")
 
         else: 
             print("No blobs found")

@@ -181,6 +181,7 @@ def apply_text(img,x,y,text):
         fontScale,
         fontColor,
         lineType)
+    cv2.destroyAllWindows()
     
 
 def peat_detector():
@@ -260,10 +261,17 @@ def peat_detector():
 def file_write_result():
     print("Write result, add text to frame.jpg")
 
-    if grab_camera_frame() == True:
-        images.raw = cv2.imread("frame.jpg")
-        apply_text(images.raw,200,200,"Hej hej")
+    if grab_masked() == True:
+        images.raw = cv2.imread("frame_masked.jpg")
+        result = peat_detector()
+
+        now = datetime.now()
+        text = 'Tracked target: ' + now.strftime("%Y %m %d T%H-%M-%S")
+        
+        apply_text(images.analysed,int(result.largest_blob_pos_x) + int(result.largest_blob_size), int(result.largest_blob_pos_y)- int(result.largest_blob_size),text)
         cv2.imwrite('frame_text.jpg', images.raw)
+        
+        cv2.destroyAllWindows()
 
         return True
     else:
@@ -316,6 +324,7 @@ def grab_masked():
         
         cv2.imwrite('frame_masked.jpg', images.masked)
 
+        cv2.destroyAllWindows()
         return True
     else:
         return False
@@ -328,6 +337,8 @@ def grab_camera_frame():
             frame.convert_pixel_format(PixelFormat.Mono8)
             cv2.imwrite('frame.jpg', frame.as_opencv_image())
             print("Image grabbed ok. Saved as frame.jpg")
+            
+            cv2.destroyAllWindows()
     return True
 
 # Functions to handle camera settings

@@ -110,7 +110,10 @@ def generate_report():
 
     write_report() 
     
-    return {"OK"}
+    return {
+        "Command": "generate_report",
+        "Result":"true"
+    }
 
 
 @app.route('/exp_show')

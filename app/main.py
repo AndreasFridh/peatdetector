@@ -53,7 +53,7 @@ def run_analysis():
 @app.route('/get_img')
 def get_img():
     print ("Getting img")
-    if file_write_result() == True: 
+    if grab_camera_frame() == True: 
         return send_file(
             'frame.jpg',
             mimetype='image/jpg',
@@ -245,7 +245,9 @@ def peat_detector():
         return None
 
 def file_write_result():
-    if grab_img() == True:
+    print("Write result, add text to frame.jpg")
+
+    if grab_camera_frame() == True:
         images.raw = cv2.imread("frame.jpg")
         apply_text(images.raw,200,200,"Hej hej")
         cv2.imwrite('frame_info.jpg', images.raw.as_opencv_image())
@@ -255,6 +257,7 @@ def file_write_result():
         return False
 
 def write_report():  
+    print("Write report starting")
 
     result = peat_detector()
 
@@ -296,7 +299,7 @@ def grab_img():
         images.mask = cv2.imread("mask.jpg", 0)
 
         images.masked = cv2.bitwise_and(images.bw,images.bw,  mask = images.mask)
-
+        
         return True
     
 def grab_camera_frame():

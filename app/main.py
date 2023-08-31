@@ -188,7 +188,9 @@ def write_report():
     text = 'Tracked target: ' + now.strftime("%Y %m %d T%H-%M-%S")
     print("Adding text to image")
     apply_text(images.analyzed, int(result.largest_blob_pos_x) + int(result.largest_blob_size), int(result.largest_blob_pos_y) - int(result.largest_blob_size), text)
-    apply_text(images.analyzed, 100, 100, text)
+    apply_text(images.analyzed, 100, 100, str(now))
+    apply_text(images.analyzed, 100, 200, str(result.exposure_time))
+    
     print("Adding shapes to report")
     fig = plt.figure(figsize=(25, 25))
     plt.title('Automatic Peat detector image analysis result report')

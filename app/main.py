@@ -156,28 +156,17 @@ def exp_set():
 # 
 def apply_text(img,x,y,text):
    
-    font                   = cv2.FONT_HERSHEY_SIMPLEX
+    font                   = cv2.FONT_HERSHEY_SIMPLEX        
     bottomLeftCornerOfText = (x,y)
-    fontScale              = 1
+    fontScale              = 2
     fontColor              = (255,255,255)
-    lineType               = 10
 
     cv2.putText(img,text, 
         bottomLeftCornerOfText, 
         font, 
         fontScale,
-        fontColor,
-        lineType)
-
-    fontColor              = (0,0,0)
-    lineType               = 5
-
-    cv2.putText(img,text, 
-        bottomLeftCornerOfText, 
-        font, 
-        fontScale,
-        fontColor,
-        lineType)
+        fontColor)
+    
     cv2.destroyAllWindows()
     
 

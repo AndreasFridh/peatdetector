@@ -196,8 +196,7 @@ def peat_detector():
         params.maxArea = 100000
         params.filterByCircularity = False
         params.filterByConvexity = True
-        params.filterByColor = True
-        params.blobColor = 200
+
 
 
         params.minConvexity = 0.4
@@ -209,7 +208,7 @@ def peat_detector():
 
         keypoints = detector.detect(images.masked)
         
-        images.filtered = cv2.blur(src=images.raw, ksize=(5,5))
+        images.filtered = cv2.blur(src=images.raw, ksize=(100,100))
 
 
         images.analysed = cv2.drawKeypoints(images.filtered, keypoints, np.array([]), (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)

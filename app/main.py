@@ -112,7 +112,6 @@ def grab_camera_frame():
             frame = cam.get_frame()
             frame.convert_pixel_format(PixelFormat.Mono8)
             cv2.imwrite('frame.jpg', frame.as_opencv_image())
-            frame.release() 
             return True
 
 # Get current exposure time

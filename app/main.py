@@ -92,18 +92,6 @@ def get_mask():
                 download_name='snapshot.jpg'
             ), 200
 
-@app.route('/get_result')
-def get_result():
-    print("Running Get_result")
-    if file_write_result() == True: 
-        return send_file(
-                    'report.png',
-                    mimetype='image/png',
-                    download_name='report.png'
-                ), 200
-
-    else: 
-        return "Image not grabbed ok"
 
 @app.route('/generate_report')
 def generate_report():
@@ -137,6 +125,15 @@ def exp_inc():
     return {
         "Exp time": str(camera_ctrl_exp_inc()),
         "Command": "exp_inc",
+        "Result":"true",
+    }
+
+@app.route('/exp_auto')
+def exp_auto():
+    print ("Request: exp_inc")
+    return {
+        "Exp time": str(camera_ctrl_exp_auto()),
+        "Command": "exp_auto",
         "Result":"true",
     }
 
@@ -261,25 +258,6 @@ def peat_detector():
     else: 
         return None
 
-def file_write_result():
-    print("Write result, add text to frame.jpg")
-
-    if grab_masked() == True:
-        images.raw = cv2.imread("frame_masked.jpg")
-        result = peat_detector()
-
-        now = datetime.now()
-        text = 'Tracked target: ' + now.strftime("%Y %m %d T%H-%M-%S")
-        
-        apply_text(images.analysed,int(result.largest_blob_pos_x) + int(result.largest_blob_size), int(result.largest_blob_pos_y)- int(result.largest_blob_size),text)
-        cv2.imwrite('frame_text.jpg', images.raw)
-        
-        cv2.destroyAllWindows()
-
-        return True
-    else:
-        return False
-
 def write_report():  
     print("Write report starting")
 
@@ -361,6 +339,7 @@ def camera_ctrl_exp_show():
         with cams[0] as cam:
             exposure_time = cam.ExposureTime
             time = exposure_time.get()
+
     return time
 
 def camera_ctrl_exp_dec():
@@ -371,17 +350,26 @@ def camera_ctrl_exp_dec():
             time = exposure_time.get()
             dec = exposure_time.get_increment()
             exposure_time.set(time - 200*dec)
+
     return (time - dec)
 
 def camera_ctrl_exp_inc():
     with Vimba.get_instance() as vimba:
         cams = vimba.get_all_cameras()
         with cams[0] as cam:
-            #exposure_time = cam.ExposureTime
+            exposure_time = cam.ExposureTime
+            time = exposure_time.get()
+            inc = exposure_time.get_increment()
+            exposure_time.set(time + 200*inc)
+
+    return (time + dec)
+
+def camera_ctrl_exp_auto():
+    with Vimba.get_instance() as vimba:
+        cams = vimba.get_all_cameras()
+        with cams[0] as cam:
             cam.ExposureAuto.set('Continuous')
-	        #time = exposure_time.get()
-            #inc = exposure_time.get_increment()
-            #exposure_time.set(time + 200*inc)
+
     return ("AUTO")
 
 def camera_ctrl_exp_custom(new_exp):
@@ -392,6 +380,7 @@ def camera_ctrl_exp_custom(new_exp):
             time = exposure_time.get()
             exposure_time.set(new_exp)
             time = exposure_time.get()
+
     return (time)
 
 if __name__ == '__main__':

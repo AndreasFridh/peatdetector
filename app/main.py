@@ -197,8 +197,6 @@ def peat_detector():
         params.filterByCircularity = False
         params.filterByConvexity = True
         params.filterByColor = True
-        params.blobColor = 255
-
 
         params.minConvexity = 0.4
         params.maxConvexity = 1 

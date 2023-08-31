@@ -154,9 +154,9 @@ def exp_set():
 # x,y :   Coordinates for text, (doh!
 # text :  String of textings
 # 
-def apply_text(img,x,y,text_input):
+def apply_text(img_input,x,y,text_input):
     cv2.putText(
-        image = img,
+        img = img_input,
         text = text_input, 
         font = cv2.FONT_HERSHEY_SIMPLEX,
         bottomLeftCornerOfText = (x,y),

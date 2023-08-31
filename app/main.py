@@ -230,6 +230,7 @@ def grab_camera_frame():
         cams = vimba.get_all_cameras()
         with cams[0] as cam:
             frame = cam.get_frame()
+            exposure_time = cam.ExposureTime
             result.exposure_time = exposure_time.get()
             frame.convert_pixel_format(PixelFormat.Mono8)
             cv2.imwrite('frame.jpg', frame.as_opencv_image())

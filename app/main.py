@@ -160,7 +160,7 @@ def apply_text(img_input,x,y,text_input):
         text = text_input, 
         fontFace = cv2.FONT_HERSHEY_SIMPLEX,
         org = (x,y),
-        FontScale   = 2,
+        fontScale   = 2,
         thickness = 10,
         fontColor = (255,255,255)
     )

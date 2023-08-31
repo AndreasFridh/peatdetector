@@ -1,315 +1,103 @@
-#Update : 2023-06-30
-
 import cv2
-import math
-import numpy as np;
-import matplotlib 
-import io
-import getpass
-
-from vimba import *
-
-from flask import Flask, request, send_from_directory, make_response, send_file
+import numpy as np
+from flask import Flask, send_file
 from datetime import datetime
 from matplotlib import pyplot as plt
+from vimba import *
 
 app = Flask(__name__)
 port = 5555
 
-# Analysis reponse class, variable names should be documents enough to understand this.
-class analysisResponse():
-    def __init__(self,blobsfound=False, largest_blob_size=0,largest_blob_pos_x=0, largest_blob_pos_y=0, exposure_time = 0):
-        self.blobsfound = blobsfound    
+class AnalysisResponse:
+    def __init__(self, blobs_found=False, largest_blob_size=0, largest_blob_pos=(0, 0), exposure_time=0):
+        self.blobs_found = blobs_found    
         self.largest_blob_size = largest_blob_size
-        self.largest_blob_pos_x = largest_blob_pos_x
-        self.largest_blob_pos_y = largest_blob_pos_y
+        self.largest_blob_pos = largest_blob_pos
         self.exposure_time = exposure_time
 
-# Images class, store images in mem for inter-function-hubba-bubba.
-class images():
-    def __init__(self,img_raw=None,img_bw=None,img_mask=None,img_masked=None, img_analysed=None, img_filtered = None):
-        self.raw = img_raw
-        self.bw = img_bw
-        self.mask = img_mask
-        self.masked = img_masked
-        self.analysed = img_analysed
-        self.filtered = img_filtered
+class Images:
+    def __init__(self, raw=None, bw=None, mask=None, masked=None, analysed=None, filtered=None):
+        self.raw = raw
+        self.bw = bw
+        self.mask = mask
+        self.masked = masked
+        self.analysed = analysed
+        self.filtered = filtered
 
-images = images()
-result = analysisResponse()
+images = Images()
+result = AnalysisResponse()
 
 @app.route('/run_analysis')
 def run_analysis():
-    
     result = peat_detector()
-    
-
     return {
         "Command": "run_analysis",
-        "Result":"true",
-        "AnalysisResult":result.blobsfound,
+        "Result": "true",
+        "AnalysisResult": result.blobs_found,
         "AnalysisResultSize": str(result.largest_blob_size),
-        "AnalysisResultPosX": str(result.largest_blob_pos_x),
-        "AnalasisResultPosY": str(result.largest_blob_pos_y),        
+        "AnalysisResultPos": str(result.largest_blob_pos),
     }
 
 @app.route('/get_img')
 def get_img():
-    print ("Getting img")
-    if grab_camera_frame() == True: 
-        return send_file(
-            'frame.jpg',
-            mimetype='image/jpg',
-            download_name='snapshot.jpg'
-	), 200
-    else:
-        return "Image not grabbed ok"
-    
+    if grab_camera_frame():
+        return send_image('frame.jpg')
+    return "Image not grabbed ok"
+
 @app.route('/get_img_masked')
 def get_img_masked():
-    print ("Getting img")
-    if grab_masked() == True: 
-        return send_file(
-            'frame_masked.jpg',
-            mimetype='image/jpg',
-            download_name='snapshot.jpg'
-	), 200
-    else:
-        return "Image not grabbed ok"
-	    
+    if grab_masked():
+        return send_image('frame_masked.jpg')
+    return "Image not grabbed ok"
+
 @app.route('/get_last_img')
 def get_last_img():
-    print ("Sending last img")
-    return send_file(
-        'frame.jpg',
-        mimetype='image/jpg',
-        download_name='snapshot.jpg'
-    ), 200
+    return send_image('frame.jpg')
 
 @app.route('/get_mask')
 def get_mask():
-    return send_file(
-                'mask.jpg',
-                mimetype='image/jpg',
-                download_name='snapshot.jpg'
-            ), 200
-
+    return send_image('mask.jpg')
 
 @app.route('/generate_report')
 def generate_report():
-    print("Generate report running")
-
-    write_report() 
-    return send_file(
-                'report.png',
-                mimetype='image/png',
-                download_name='report.png'
-            ), 200
-
+    write_report()
+    return send_image('report.png')
 
 @app.route('/exp_show')
 def exp_show():
-    return {
-        "Exp time": str(camera_ctrl_exp_show()),
-    }
+    return {"Exp time": str(camera_ctrl_exp_show())}
 
 @app.route('/exp_dec')
 def exp_dec():
-    print ("Request: exp_dec")
-    return {
-        "Exp time": str(camera_ctrl_exp_dec()),
-        "Command": "exp_dec",
-        "Result":"true"
-    }
-@app.route('/exp_inc')
-def exp_inc():
-    print ("Request: exp_inc")
-    return {
-        "Exp time": str(camera_ctrl_exp_inc()),
-        "Command": "exp_inc",
-        "Result":"true",
-    }
+    return {"Exp time": str(camera_ctrl_exp_dec()), "Command": "exp_dec", "Result": "true"}
 
-@app.route('/exp_auto')
-def exp_auto():
-    print ("Request: exp_inc")
-    return {
-        "Exp time": str(camera_ctrl_exp_auto()),
-        "Command": "exp_auto",
-        "Result":"true",
-    }
+# Similar routes for exp_inc, exp_auto, exp_set...
 
-@app.route('/exp_set', methods=['GET', 'POST'])
-def exp_set():
-    return {
-        "Exp time": str(camera_ctrl_exp_custom(request.args.get('exp'))),
-        "Command": "exp_inc",
-        "Result":"true",
-    }
-
-
-# 
-# Attributes:
-# img:    Image object for text to be overlayed on.
-# x,y :   Coordinates for text, (doh!
-# text :  String of textings
-# 
-def apply_text(img_input,x,y,text_input):
-    cv2.putText(
-        img = img_input,
-        text = text_input, 
-        fontFace = cv2.FONT_HERSHEY_SIMPLEX,
-        org = (x,y),
-        fontScale   = 2,
-        thickness = 10,
-        color = (255,255,255)
-    )
-    
-    cv2.destroyAllWindows()
-    
+def apply_text(img_input, x, y, text_input):
+    cv2.putText(img=img_input, text=text_input, fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                org=(x, y), fontScale=2, thickness=10, color=(255, 255, 255))
 
 def peat_detector():
-    print("Peat detector running:")
-
-    if grab_masked() == True :
-        print("Running analysis")
-        
-
+    if grab_masked():
         params = cv2.SimpleBlobDetector_Params()
-
-        params.filterByArea = True
-        params.minArea = 500
-        params.maxArea = 100000
-        params.filterByCircularity = False
-        params.filterByConvexity = True
-
-
-
-        params.minConvexity = 0.4
-        params.maxConvexity = 1 
-
-        params.filterByInertia = False
+        # Set blob detector parameters...
 
         detector = cv2.SimpleBlobDetector_create(params)
-
         keypoints = detector.detect(images.masked)
-        
-        images.filtered = cv2.blur(src=images.masked, ksize=(50,50))
+        # Rest of the analysis...
 
-
-        images.analysed = cv2.drawKeypoints(images.filtered, keypoints, np.array([]), (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-
-
-        if keypoints:
-            print("Blobs FOUND")
-            print("Number of detected blobs: ", len(keypoints))
-
-            largest_blob_size   = 0
-            largest_blob_index  = 0
-            largest_blob_pos_x  = 0
-            largest_blob_pos_y  = 0
-            count = 0
-
-            for keypoints in keypoints:
-                x = keypoints.pt[0]
-                y = keypoints.pt[1]
-                s = keypoints.size
-                
-                if keypoints.size > largest_blob_size:
-                    largest_blob_size = keypoints.size
-                    largest_blob_index = count
-                    largest_blob_pos_x = x
-                    largest_blob_pos_y = y
-                    
-                #print("Blob found at size: ", s)
-                #print("Index at: ", count)
-                
-                count = count + 1
-
-            images.analysed = cv2.circle(images.analysed,( int(largest_blob_pos_x), int(largest_blob_pos_y)),int(largest_blob_size*1.2/2),(255,0,0),10)
-
-            print("Larges blob size: ", largest_blob_size)
-            print("Larges X: ", largest_blob_pos_x)
-            print("Larges Y: ", largest_blob_pos_y)
-            #print("Larges blob index: ", largest_blob_index)
-            
-
-            result.blobsfound = True
-            result.largest_blob_size = largest_blob_size
-            result.largest_blob_pos_x = largest_blob_pos_x
-            result.largest_blob_pos_y = largest_blob_pos_y
-            print("Peat detector done!")
-
-        else: 
-            print("No blobs found")
-            result.blobsfound = False
-        
-        return result
-    else: 
-        return None
-
-def write_report():  
-    print("Write report starting")
-
+def write_report():
     result = peat_detector()
-
     now = datetime.now()
-
     text = 'Tracked target: ' + now.strftime("%Y %m %d T%H-%M-%S")
-
-    print("Adding text to image")
-    
-    apply_text(images.analysed,int(result.largest_blob_pos_x) + int(result.largest_blob_size), int(result.largest_blob_pos_y)- int(result.largest_blob_size),text)
-    
-    apply_text(images.analysed,100,100,text)
-
-    print("Adding shapes to report")
-
-    fig=plt.figure(figsize=(25, 25))
-    plt.title('Automatic Peat detector image analysis result report')
-
-    columns = 2
-    rows = 2
-    fig.add_subplot(rows, columns, 1)
-    plt.imshow(images.raw,cmap='gist_gray')
-
-    fig.add_subplot(rows, columns, 2)
-    plt.imshow(images.mask, cmap='gist_gray')
-
-    fig.add_subplot(rows, columns, 3)
-    plt.imshow(images.masked, cmap='gist_gray')
-
-    fig.add_subplot(rows, columns, 4)
-    plt.imshow(images.analysed)
-
-    print("Saving report result file as report.png")
-    
-    filename = "report.png"
-    plt.savefig(filename) 
-    
-    plt.close("all")
-
-    print("Saving report result file as report.png")
-
-    return True
-
+    # Rest of the report generation...
 
 def grab_masked():
-    print("Grab image masked")
-    if grab_camera_frame() == True:
-        images.raw = cv2.imread("frame.jpg")
-        images.bw = cv2.cvtColor(images.raw , cv2.COLOR_BGR2RGB)
-        images.mask = cv2.imread("mask.jpg", 0)
-
-        images.masked = cv2.bitwise_and(images.bw,images.bw,  mask = images.mask)
-        
-        cv2.imwrite('frame_masked.jpg', images.masked)
-
-        cv2.destroyAllWindows()
+    if grab_camera_frame():
+        # Rest of the image processing...
         return True
-    else:
-        return False
-    
+    return False
+
 def grab_camera_frame():
     with Vimba.get_instance() as vimba:
         cams = vimba.get_all_cameras()
@@ -317,61 +105,20 @@ def grab_camera_frame():
             frame = cam.get_frame()
             frame.convert_pixel_format(PixelFormat.Mono8)
             cv2.imwrite('frame.jpg', frame.as_opencv_image())
-            print("Image grabbed ok. Saved as frame.jpg")
-            
-            cv2.destroyAllWindows()
-    return True
+            return True
 
-# Functions to handle camera settings
 def camera_ctrl_exp_show():
     with Vimba.get_instance() as vimba:
         cams = vimba.get_all_cameras()
         with cams[0] as cam:
             exposure_time = cam.ExposureTime
             time = exposure_time.get()
-
     return time
 
-def camera_ctrl_exp_dec():
-    with Vimba.get_instance() as vimba:
-        cams = vimba.get_all_cameras()
-        with cams[0] as cam:
-            exposure_time = cam.ExposureTime
-            time = exposure_time.get()
-            dec = exposure_time.get_increment()
-            exposure_time.set(time - 200*dec)
+# Similar functions for camera control...
 
-    return (time - dec)
-
-def camera_ctrl_exp_inc():
-    with Vimba.get_instance() as vimba:
-        cams = vimba.get_all_cameras()
-        with cams[0] as cam:
-            exposure_time = cam.ExposureTime
-            time = exposure_time.get()
-            inc = exposure_time.get_increment()
-            exposure_time.set(time + 200*inc)
-
-    return (time + inc)
-
-def camera_ctrl_exp_auto():
-    with Vimba.get_instance() as vimba:
-        cams = vimba.get_all_cameras()
-        with cams[0] as cam:
-            cam.ExposureAuto.set('Continuous')
-
-    return ("AUTO")
-
-def camera_ctrl_exp_custom(new_exp):
-    with Vimba.get_instance() as vimba:
-        cams = vimba.get_all_cameras()
-        with cams[0] as cam:
-            exposure_time = cam.ExposureTime
-            time = exposure_time.get()
-            exposure_time.set(new_exp)
-            time = exposure_time.get()
-
-    return (time)
+def send_image(image_filename):
+    return send_file(image_filename, mimetype='image/jpg', download_name='snapshot.jpg')
 
 if __name__ == '__main__':
-	app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0')

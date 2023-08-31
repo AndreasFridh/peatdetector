@@ -162,7 +162,7 @@ def apply_text(img_input,x,y,text_input):
         org = (x,y),
         fontScale   = 2,
         thickness = 10,
-        fontColor = (255,255,255)
+        color = (255,255,255)
     )
     
     cv2.destroyAllWindows()

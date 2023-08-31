@@ -158,9 +158,9 @@ def apply_text(img_input,x,y,text_input):
     cv2.putText(
         img = img_input,
         text = text_input, 
-        font = cv2.FONT_HERSHEY_SIMPLEX,
-        bottomLeftCornerOfText = (x,y),
-        fontScale   = 2,
+        fontFace = cv2.FONT_HERSHEY_SIMPLEX,
+        org = (x,y),
+        FontScale   = 2,
         thickness = 10,
         fontColor = (255,255,255)
     )

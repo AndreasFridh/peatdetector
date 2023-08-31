@@ -362,7 +362,7 @@ def camera_ctrl_exp_inc():
             inc = exposure_time.get_increment()
             exposure_time.set(time + 200*inc)
 
-    return (time + dec)
+    return (time + inc)
 
 def camera_ctrl_exp_auto():
     with Vimba.get_instance() as vimba:

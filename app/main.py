@@ -18,13 +18,14 @@ port = 5555
 
 # Analysis reponse class, variable names should be documents enough to understand this.
 class analysisResponse():
-    def __init__(self,blobsfound=False, largest_blob_size=0,largest_blob_pos_x=0, largest_blob_pos_y=0):
-        self.blobsfound = blobsfound
-             
+    def __init__(self,blobsfound=False, largest_blob_size=0,largest_blob_pos_x=0, largest_blob_pos_y=0, exposure_time = 0):
+        self.blobsfound = blobsfound    
         self.largest_blob_size = largest_blob_size
         self.largest_blob_pos_x = largest_blob_pos_x
         self.largest_blob_pos_y = largest_blob_pos_y
+        self.exposure_time = exposure_time
 
+# Images class, store images in mem for inter-function-hubba-bubba.
 class images():
     def __init__(self,img_raw=None,img_bw=None,img_mask=None,img_masked=None, img_analysed=None, img_filtered = None):
         self.raw = img_raw
@@ -35,6 +36,7 @@ class images():
         self.filtered = img_filtered
 
 images = images()
+result = analysisResponse()
 
 @app.route('/run_analysis')
 def run_analysis():
@@ -184,7 +186,7 @@ def peat_detector():
 
     if grab_masked() == True :
         print("Running analysis")
-        result = analysisResponse()
+        
 
         params = cv2.SimpleBlobDetector_Params()
 
@@ -209,6 +211,7 @@ def peat_detector():
 
 
         images.analysed = cv2.drawKeypoints(images.filtered, keypoints, np.array([]), (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+
 
         if keypoints:
             print("Blobs FOUND")
@@ -248,7 +251,7 @@ def peat_detector():
             result.largest_blob_size = largest_blob_size
             result.largest_blob_pos_x = largest_blob_pos_x
             result.largest_blob_pos_y = largest_blob_pos_y
-            print("Peat detector done:")
+            print("Peat detector done!")
 
         else: 
             print("No blobs found")
@@ -270,6 +273,8 @@ def write_report():
     print("Adding text to image")
     
     apply_text(images.analysed,int(result.largest_blob_pos_x) + int(result.largest_blob_size), int(result.largest_blob_pos_y)- int(result.largest_blob_size),text)
+    
+    apply_text(images.analysed,100,100,text)
 
     print("Adding shapes to report")
 
@@ -289,8 +294,6 @@ def write_report():
 
     fig.add_subplot(rows, columns, 4)
     plt.imshow(images.analysed)
-
-    #filename = "Image Analyis Peat Detection Report " + now.strftime("%Y %m %d T%H-%M-%S")
 
     print("Saving report result file as report.png")
     

@@ -154,18 +154,16 @@ def exp_set():
 # x,y :   Coordinates for text, (doh!
 # text :  String of textings
 # 
-def apply_text(img,x,y,text):
-   
-    font                   = cv2.FONT_HERSHEY_SIMPLEX        
-    bottomLeftCornerOfText = (x,y)
-    fontScale              = 2
-    fontColor              = (255,255,255)
-
-    cv2.putText(img,text, 
-        bottomLeftCornerOfText, 
-        font, 
-        fontScale,
-        fontColor)
+def apply_text(img,x,y,text_input):
+    cv2.putText(
+        image = img,
+        text = text_input, 
+        font = cv2.FONT_HERSHEY_SIMPLEX,
+        bottomLeftCornerOfText = (x,y),
+        fontScale   = 2,
+        thickness = 10,
+        fontColor = (255,255,255)
+    )
     
     cv2.destroyAllWindows()
     

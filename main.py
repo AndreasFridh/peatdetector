@@ -2,35 +2,30 @@ import cv2
 import numpy as np
 from vimba import Vimba, PixelFormat
 from flask import Flask, send_file
-from dataclasses import dataclass, field
 from datetime import datetime
 from matplotlib import pyplot as plt
 
 app = Flask(__name__)
 port = 5555
 
-@dataclass
-class AnalysisResponse:
-    """
-    Class for storing the results of an image analysis.
-    """
-    blobs_found: bool = False
-    largest_blob_size: int = 0
-    largest_blob_pos_x: int = 0
-    largest_blob_pos_y: int = 0
-    exposure_time: int = 0
+# Class for analysis response
+class AnalysisResponse():
+    def __init__(self):
+        self.blobs_found = None
+        self.largest_blob_size = None
+        self.largest_blob_pos_x = None
+        self.largest_blob_pos_y = None
+        self.exposure_time = None
 
-@dataclass
-class Images:
-    """
-    Class for storing various processed forms of an image.
-    """
-    raw: object = field(default=None, repr=False)
-    bw: object = field(default=None, repr=False)
-    mask: object = field(default=None, repr=False)
-    masked: object = field(default=None, repr=False)
-    analyzed: object = field(default=None, repr=False)
-    filtered: object = field(default=None, repr=False)
+# Class for storing images
+class Images():
+    def __init__(self):
+        self.raw = None
+        self.bw = None
+        self.mask = None
+        self.masked = None
+        self.analyzed = None
+        self.filtered = None
 
 images = Images()
 result = AnalysisResponse()

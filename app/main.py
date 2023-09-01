@@ -30,6 +30,13 @@ class Images():
 images = Images()
 result = AnalysisResponse()
 
+@app.route('/test_vimba')
+def test_vimba():
+    if grab_camera_frame():
+        return send_file('frame.jpg', mimetype='image/jpg', download_name='snapshot.jpg'), 200
+    else:
+        return {"Result": "Image not grabbed ok"}
+
 @app.route('/run_analysis')
 def run_analysis():
     result = peat_detector()
@@ -110,6 +117,16 @@ def exp_set():
         "Command": "exp_set",
         "Result": "true",
     }
+
+def apply_text(img_input, x, y, text_input):
+    with Vimba.get_instance() as vimba:
+        cams = vimba.get_all_cameras()
+
+        print('Cameras found: {}'.format(len(cams)))
+
+        for cam in cams:
+            print(cam)
+
 
 # Apply text on an image at specified coordinates
 def apply_text(img_input, x, y, text_input):

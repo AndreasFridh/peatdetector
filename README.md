@@ -1,6 +1,6 @@
 # Peat Detector
 
-#Flask Routes:
+## Flask Routes:
 /run_analysis: Runs the peat detector and returns a JSON object with the analysis.
 /get_img: Grabs a frame from the camera and returns it as an image file.
 /get_img_masked: Grabs a masked frame from the camera and returns it.
@@ -9,7 +9,7 @@
 /generate_report: Generates a report based on the last analysis.
 /exp_show, /exp_dec, /exp_inc, /exp_auto, /exp_set: Various routes for manipulating and fetching the camera's exposure settings.
 
-#Class Definitions:
+## Class Definitions:
 AnalysisResponse: This class is used to hold the results of an image analysis.
 
 blobs_found: Boolean indicating if blobs were found in the image.

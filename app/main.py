@@ -33,29 +33,32 @@ result = AnalysisResponse()
 @app.route('/run_analysis')
 def run_analysis():
     result = peat_detector()
-    return {
-        "Command": "run_analysis",
-        "Result": "true",
-        "AnalysisResult": result.blobs_found,
-        "AnalysisResultSize": str(result.largest_blob_size),
-        "AnalysisResultPosX": str(result.largest_blob_pos_x),
-        "AnalasisResultPosY": str(result.largest_blob_pos_y),
-    }
-
+    if result:  # Check if the result is not None.
+        return {
+            "Command": "run_analysis",
+            "Result": "true",
+            "AnalysisResult": result.blobs_found,
+            "AnalysisResultSize": str(result.largest_blob_size),
+            "AnalysisResultPosX": str(result.largest_blob_pos_x),
+            "AnalysisResultPosY": str(result.largest_blob_pos_y),
+        }
+    else:
+        return {"Result": "false"}
+    
 @app.route('/get_img')
 def get_img():
     if grab_camera_frame():
         return send_file('frame.jpg', mimetype='image/jpg', download_name='snapshot.jpg'), 200
     else:
-        return "Image not grabbed ok"
+        return {"Result": "Image not grabbed ok"}
 
 @app.route('/get_img_masked')
 def get_img_masked():
     if grab_masked():
-        return send_file('frame_masked.jpg', mimetype='image/jpg', download_name='snapshot.jpg'), 200
+        return send_file('frame_masked.jpg', mimetype='image/jpg', download_name='snapshot_masked.jpg'), 200
     else:
-        return "Image not grabbed ok"
-
+        return {"Result": "Image not grabbed ok"}
+    
 @app.route('/get_last_img')
 def get_last_img():
     return send_file('frame.jpg', mimetype='image/jpg', download_name='snapshot.jpg'), 200

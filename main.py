@@ -2,30 +2,35 @@ import cv2
 import numpy as np
 from vimba import Vimba, PixelFormat
 from flask import Flask, send_file
+from dataclasses import dataclass, field
 from datetime import datetime
 from matplotlib import pyplot as plt
 
 app = Flask(__name__)
 port = 5555
 
-# Class for analysis response
-class AnalysisResponse():
-    def __init__(self, blobs_found=False, largest_blob_size=0, largest_blob_pos_x=0, largest_blob_pos_y=0, exposure_time=0):
-        self.blobs_found = blobs_found
-        self.largest_blob_size = largest_blob_size
-        self.largest_blob_pos_x = largest_blob_pos_x
-        self.largest_blob_pos_y = largest_blob_pos_y
-        self.exposure_time = exposure_time
+@dataclass
+class AnalysisResponse:
+    """
+    Class for storing the results of an image analysis.
+    """
+    blobs_found: bool = False
+    largest_blob_size: int = 0
+    largest_blob_pos_x: int = 0
+    largest_blob_pos_y: int = 0
+    exposure_time: int = 0
 
-# Class for storing images
-class Images():
-    def __init__(self, img_raw=None, img_bw=None, img_mask=None, img_masked=None, img_analyzed=None, img_filtered=None):
-        self.raw = img_raw
-        self.bw = img_bw
-        self.mask = img_mask
-        self.masked = img_masked
-        self.analyzed = img_analyzed
-        self.filtered = img_filtered
+@dataclass
+class Images:
+    """
+    Class for storing various processed forms of an image.
+    """
+    raw: object = field(default=None, repr=False)
+    bw: object = field(default=None, repr=False)
+    mask: object = field(default=None, repr=False)
+    masked: object = field(default=None, repr=False)
+    analyzed: object = field(default=None, repr=False)
+    filtered: object = field(default=None, repr=False)
 
 images = Images()
 result = AnalysisResponse()
